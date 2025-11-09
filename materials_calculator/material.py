@@ -38,18 +38,19 @@ def _brick_volume_stitch(brik_size: tuple[int, int, int], stitch: int) -> int:
     return brick_size_stitch[0] * brick_size_stitch[1] * brick_size_stitch[2]
 
 
-def amount_of_material(volume: int, brik_size: tuple[int, int, int], stitch=10) -> tuple[float, float]:
+def amount_of_material(volume: int, brik_size: tuple[int, int, int], stitch=10, coef=0.96) -> tuple[float, float]:
     """вычисляет количество кирпичей (шт.) и объем раствора (метры кубические)
 
     Args:
         volume (int): объем стены, мм куб
         brik_size (tuple[int, int, int]): размеры кирпича
-        stitch (int, optional): Растворный шов. Defaults to 10.
+        stitch (int, optional): Растворный шов. Defaults to 10
+        coef (float, optional): Коэфициент поправки на лишнее количество растворного шва. Defaults to 0.96
 
     Returns:
         tuple[float, float]: количество кирпичей и раствора с 5% надбавкой
     """
-    number_of_bricks = ceil((volume / _brick_volume_stitch(brik_size, stitch)) * 1.05)
+    number_of_bricks = ceil((volume / _brick_volume_stitch(brik_size, stitch)*coef) * 1.05)
     volume_of_solution = round(((volume/_brick_volume(brik_size) - number_of_bricks) * _brick_volume(brik_size) / 10**9) * 1.05, 2)
     return number_of_bricks, volume_of_solution
 
